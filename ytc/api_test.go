@@ -4,7 +4,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/revett/go-yt-comments/ytc"
+	"github.com/ivan2kh/go-yt-comments/ytc"
 )
 
 func TestAPI(t *testing.T) {

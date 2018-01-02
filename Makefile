@@ -1,6 +1,6 @@
 BRANCH = "master"
 GO_BUILDER_IMAGE = "vidsyhq/go-builder"
-PATH_BASE = "/go/src/github.com/revett"
+PATH_BASE = "/go/src/github.com/ivan2kh"
 REPONAME = "go-yt-comments"
 TEST_PACKAGES = "./ytc"
 VERSION = $(shell cat ./VERSION)

@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/revett/go-yt-comments/ytc/models/api"
+	"github.com/ivan2kh/go-yt-comments/ytc/models/api"
 )
 
 type (
@@ -27,6 +27,13 @@ func NewAPI(key string) API {
 		key: key,
 	}
 }
+
+type FetchError struct {
+	msg string
+	ResponseCode int
+}
+
+func (e *FetchError) Error() string { return e.msg }
 
 // FetchComments receives a YouTube Video ID and a MaxComments integer as
 // arguments. The Video ID is used to know what video to fetch comments for.
@@ -67,10 +74,11 @@ func (a API) fetch(request *http.Request, maxComments int, commmentThreadLists [
 	defer response.Body.Close()
 
 	if response.StatusCode > 200 {
-		return nil, fmt.Errorf(
+		return nil, &FetchError{msg:fmt.Sprintf(
 			"Non-200 status code returned from YouTube API, got: '%d'",
-			response.StatusCode,
-		)
+				response.StatusCode,
+			),
+			ResponseCode:response.StatusCode}
 	}
 
 	var commentThreadList api.CommentThreadList
