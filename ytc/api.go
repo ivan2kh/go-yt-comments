@@ -8,11 +8,15 @@ import (
 	"github.com/ivan2kh/go-yt-comments/ytc/models/api"
 )
 
+type KeyGetter interface{
+    GetKey() (s *string, err error)
+}
+
 type (
 	// API is the top level struct used to interact with this package, it requires
 	// an API key.
 	API struct {
-		key string
+	    keyGetter KeyGetter
 	}
 )
 
@@ -22,9 +26,9 @@ const (
 )
 
 // NewAPI receives an API key as an argument, and returns a new API struct.
-func NewAPI(key string) API {
+func NewAPI(kg KeyGetter) API {
 	return API{
-		key: key,
+		keyGetter: kg,
 	}
 }
 
@@ -123,7 +127,12 @@ func (a API) formRequest(videoID string, nextPageToken string) (*http.Request, e
 
 	queryParams := request.URL.Query()
 
-	queryParams.Add("key", a.key)
+    key, err:=a.keyGetter.GetKey();
+	if err!=nil {
+	    return nil, err
+    }
+
+	queryParams.Add("key", *key)
 	queryParams.Add("maxResults", maxResults)
 	queryParams.Add("order", "time")
 	queryParams.Add("part", "snippet,replies")
